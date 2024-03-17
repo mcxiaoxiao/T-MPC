@@ -15,12 +15,12 @@ class FydycDataset(Dataset):
         self.scaler_labels = MinMaxScaler()
 
         # 提取特征和标签
-        labels = self.data['风电预测'].values.reshape(-1, 1)+self.data['光伏预测'].values.reshape(-1, 1)+self.data['火电计划'].values.reshape(-1, 1)+self.data['水电计划'].values.reshape(-1, 1)
-        features = self.data['供电预测'].values.reshape(-1, 1)
+        labels = self.data['实际值'].values.reshape(-1, 1)
+        features = self.data['预测值'].values.reshape(-1, 1)
 
         # 训练标准化器并应用于特征和标签
-        self.data['供电预测'] = self.scaler_features.fit_transform(features)
-        self.data['实际总和'] = self.scaler_labels.fit_transform(labels)
+        self.data['预测值'] = self.scaler_features.fit_transform(features)
+        self.data['实际值'] = self.scaler_labels.fit_transform(labels)
 
     def __len__(self):
         # 返回数据集中的样本数量
@@ -30,8 +30,8 @@ class FydycDataset(Dataset):
         # 从数据集中获取一项数据
         sample = self.data.iloc[idx]
         # 提取特征和标签
-        features = torch.tensor(sample['供电预测'], dtype=torch.float32)
-        label = torch.tensor(sample['实际总和'], dtype=torch.float32)
+        features = torch.tensor(sample['预测值'], dtype=torch.float32)
+        label = torch.tensor(sample['预测值'], dtype=torch.float32)
         return features, label
 
     def inverse_transform_features(self, values):
