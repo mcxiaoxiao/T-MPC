@@ -41,4 +41,11 @@ class PowerPlantDataset(Dataset):
     def inverse_transform_labels(self, values):
         # 逆向标准化标签
         return self.scaler_labels.inverse_transform(values)
+    
+    def get_normalized_features(self, values):
+        # 返回标准化后的特征
+        return self.scaler_features.transform(values)
 
+    def get_normalized_labels(self, values):
+        # 返回标准化后的标签
+        return self.scaler_labels.transform(values.reshape(-1, 1))
