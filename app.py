@@ -62,6 +62,7 @@ def predict(value, current_date, predict_date, model_name):
     返回:
     - 预测结果（float）
     """
+    # print(datas[model_name])
     dataset = FydycDataset(csv_file = datas[model_name])
     
     if value == 0:
@@ -167,6 +168,9 @@ class PredictionResult(BaseModel):
     std: float
     interval_lower: float
     interval_upper: float
+    
+class xzPredictionResult(BaseModel):
+    predict: float
 
 
 # 创建一个路由
@@ -179,10 +183,10 @@ async def predict_cyl(value: float, power_type: str):
 
 
 # 创建一个路由
-@app.get("/predict")
+@app.get("/predict",response_model=xzPredictionResult)
 async def predict_endpoint(value: float, start_date: str, end_date: str, power_type: str):
     # 调用 predict 函数并返回结果
-    predicted_result = predict(value, start_date, end_date, power_type)
+    predicted_result = {"predict":predict(value, start_date, end_date, power_type)}
     print(f'修正后的预测结果: {predicted_result}')
     return predicted_result
 
